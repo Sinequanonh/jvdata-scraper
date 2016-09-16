@@ -4,7 +4,7 @@
 Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur jeuxvideo.com après le rachat par Webedia en 2012 et la mise en demeure du site début 2016, après une pause de 6 mois je décide de développer un outil autour de jeuxvideo.com. Le site a pour objectif de développer sa propre communauté.
 
 #Somaire Features
-- [JvStalker](#JvStalker)
+- [JvStalker](#jvstalker)
 - Statistiques
 - Galerie
 - API
