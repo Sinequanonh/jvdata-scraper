@@ -4,7 +4,7 @@
 Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur jeuxvideo.com après le rachat par Webedia en 2012 et la mise en demeure du site début 2016, après une pause de 6 mois je décide de développer un outil autour de jeuxvideo.com. Le site a pour objectif de développer sa propre communauté.
 
 #Somaire Features
-- JvStalker
+- [JvStalker](#JvStalker)
 - Statistiques
 - Galerie
 - API
@@ -12,7 +12,7 @@ Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur je
 - Forum
 - Crawler
 
-# JvStalker
+#JvStalker
 L'idéal serait un système d'invitation. Une clé es générée par utilisateur par semaine, sinon il faut en acheter une. Donnerait accès à la galerie, au prenium(?). 
 Notifications
 
@@ -24,7 +24,7 @@ features :
 # Galerie
 Système à la pr0gramm : les images crawlées ne sont pas affichées en temps réel. Elle sont dans une catégorie dont seuls les inscrits peuvent accéder. Ils peuvent upvote ou downvote la photo + la tagger.
 Si la photo a un ratio positif, elle ira dans la galerie principale pour tout le monde. Le porn sera filtré dans sa catégorie. 
-Les utilisateurs sont 
+ 
 Filtre par:
 	Pseudo
 	noelshack
