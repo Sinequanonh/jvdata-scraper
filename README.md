@@ -6,11 +6,11 @@ Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur je
 #Somaire Features
 - [JvStalker](#jvstalker)
 - Statistiques
-- Galerie
+- [Galerie](#galerie)
 - API
-- Prenium
+- [Prenium](#prenium)
 - Forum
-- Crawler
+- [Crawler](#crawler)
 
 #JvStalker
 L'idéal serait un système d'invitation. Une clé es générée par utilisateur par semaine, sinon il faut en acheter une. Donnerait accès à la galerie, au prenium(?). 
