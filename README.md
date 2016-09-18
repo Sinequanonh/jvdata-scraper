@@ -31,8 +31,6 @@ Filtre par:
 	puush
 	vocaroo
 
-
-
 # Crawler
 Doit être capable de récupérer toutes les données pour chaque feature
 	Temps réel :
