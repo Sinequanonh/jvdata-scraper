@@ -27,7 +27,7 @@ def main():
 		print red + url + white
 		topic_list = get25Topics(url, s)
 		fromLastPage(topic_list, s)
-		return
+		page += 25
 
 # Get the 25 topics from the page
 def get25Topics(url, s):
@@ -64,7 +64,8 @@ def fromLastPage(topic_list, s):
 			topic = '-'.join(previous)
 			print cyan + topic + white
 			r = singleRequest(topic, s)
-			get_messages(r)
+			if get_messages(r) == 1:
+				break
 
 # Parse each message
 def get_messages(page):
@@ -104,18 +105,25 @@ def get_messages(page):
 		row_list = (pseudo, ancre, message_raw, date, avatar)
 		bulk_insert.append(row_list)
 		# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,message_raw,date,avatar))
-	threads = []
-	t = threading.Thread(target=bulkinsert, args=(bulk_insert,))
-	threads.append(t)
-	t.start()
+	# threads = []
+	# t = threading.Thread(target=bulkinsert, args=(bulk_insert,))
+	# threads.append(t)
+	# t.start()
+	bulk_insert = bulk_insert[::-1]
+	# print bulk_insert
+	if bulkinsert(bulk_insert) == 1:
+		return 1
+	return 0
 	
-	
-
 def bulkinsert(bulk_insert):
 	cursor = db.cursor()
-	cursor.executemany("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, bulk_insert)
-	db.commit()
-	return
+	for row in bulk_insert:
+		try:
+			cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
+			db.commit()
+		except MySQLdb.IntegrityError:
+			return 1
+	return 0
 
 def parse_date(date):
 	p_date = date.split(' ')
