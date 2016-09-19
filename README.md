@@ -32,6 +32,7 @@ Filtre par:
 	vocaroo
 
 # Crawler
+['pseudo', 'ancre', 'message', 'date', 'avatar']
 Doit être capable de récupérer toutes les données pour chaque feature
 	Temps réel :
 		Crawl les 2 premières pages

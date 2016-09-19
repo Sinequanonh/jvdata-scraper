@@ -5,9 +5,15 @@ import re
 import os
 import math
 from datetime import datetime
+import threading
 from variables import *
 from get_messages import *
 from bs4 import BeautifulSoup, SoupStrainer
+import MySQLdb
+from cgi import escape
+
+# connect
+db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
 
 # Main Function
 def main(): 
@@ -64,13 +70,14 @@ def fromLastPage(topic_list, s):
 def get_messages(page):
 	bloc_message = SoupStrainer('div', {'class': 'bloc-message-forum '})
 	soup = BeautifulSoup(page.text, "html.parser", parse_only=bloc_message)
+	bulk_insert = []
 	for s in soup:
 		# PSEUDO
 		try:
 			pseudo = s.find('span', attrs={'class': 'bloc-pseudo-msg'})
 			pseudo = pseudo.getText().replace(' ', '').replace('\n', '')
 		except:
-			pseudo = "Pseudo supprimé"
+			pseudo = "Pseudo supprime"
 		# ANCRE
 		ancre = s['data-id']
 		# MESSAGE
@@ -92,8 +99,23 @@ def get_messages(page):
 			avatar = avatar['data-srcset'].replace('avatar-sm', 'avatar-md').replace('//image.jeuxvideo.com/', '') # Add 'image.jeuxvideo.com' in frontend
 		except:
 			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"	
-		# print 'image.jeuxvideo.com/' + avatar
 		print ancre + ' ' + pseudo
+
+		row_list = (pseudo, ancre, message_raw, date, avatar)
+		bulk_insert.append(row_list)
+		# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,message_raw,date,avatar))
+	threads = []
+	t = threading.Thread(target=bulkinsert, args=(bulk_insert,))
+	threads.append(t)
+	t.start()
+	
+	
+
+def bulkinsert(bulk_insert):
+	cursor = db.cursor()
+	cursor.executemany("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, bulk_insert)
+	db.commit()
+	return
 
 def parse_date(date):
 	p_date = date.split(' ')
