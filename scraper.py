@@ -11,6 +11,7 @@ from get_messages import *
 from bs4 import BeautifulSoup, SoupStrainer
 import MySQLdb
 from cgi import escape
+from collections import Counter
 
 # connect
 db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
@@ -72,6 +73,7 @@ def get_messages(page):
 	bloc_message = SoupStrainer('div', {'class': 'bloc-message-forum '})
 	soup = BeautifulSoup(page.text, "html.parser", parse_only=bloc_message)
 	bulk_insert = []
+	trends = []
 	for s in soup:
 		# PSEUDO
 		try:
@@ -86,6 +88,10 @@ def get_messages(page):
 		message = message_raw.renderContents().replace('\n', '')
 		message_raw = message_raw.getText()
 		message_raw = ' '.join(message_raw.split())
+
+		each_word = message_raw.split(' ')
+		for word in each_word:
+			trends.append(word)
 
 		nb_mots = len(message_raw.split(' '))
 		nb_chars = len(message_raw)
@@ -109,6 +115,21 @@ def get_messages(page):
 	# t = threading.Thread(target=bulkinsert, args=(bulk_insert,))
 	# threads.append(t)
 	# t.start()
+	
+	c=Counter(trends)
+	k = c.most_common()
+	ban_loop = 1
+	ban = 0
+	while ban_loop == 1:
+		if (
+			k[ban][0] == "de" or
+			k[ban][0] == "que" or
+			ban += 1
+		else:
+			ban_loop = 0
+
+	print 'Most Common Word 1: ' + yellow + k[ban][0] + white
+
 	bulk_insert = bulk_insert[::-1]
 	# print bulk_insert
 	if bulkinsert(bulk_insert) == 1:
