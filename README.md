@@ -10,6 +10,7 @@ Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur je
 - [Prenium](#prenium)
 - Forum
 - [Crawler](#crawler)
+- [Community (blabla)](#Community)
 
 #JvStalker
 L'idéal serait un système d'invitation. Une clé es générée par utilisateur par semaine, sinon il faut en acheter une. Donnerait accès à la galerie, au prenium(?). 
@@ -32,7 +33,7 @@ Filtre par:
 
 #Crawler
 ['pseudo', 'ancre', 'message', 'date', 'avatar']
-Doit être capable de récupérer toutes les données pour chaque feature
+Doit être capable de récupérer toutes les données pour chaque feature, stats topic en temps réel
 	Temps réel :
 		Crawl les 2 premières pages
 	Forum entier :
@@ -41,6 +42,9 @@ Doit être capable de récupérer toutes les données pour chaque feature
 
 #Outils modérateur
 Filtrer les topics par mot clé, à caractère raciste etc..
+
+#Community
+Crée une "communauté" avec stats du topic, des membres, un avatar etc..
 
 Benchmark:
 	Lister tous les types de liens et les lister par occurence
