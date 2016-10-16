@@ -65,8 +65,9 @@ def fromLastPage(topic_list, s):
 			topic = '-'.join(previous)
 			print cyan + topic + white
 			r = singleRequest(topic, s)
-			if get_messages(r) == 1:
-				break
+			if type(r) != bool:
+				if get_messages(r) == 1:
+					break
 
 # Parse each message
 def get_messages(page):
@@ -116,19 +117,12 @@ def get_messages(page):
 	# threads.append(t)
 	# t.start()
 	
-	c=Counter(trends)
-	k = c.most_common()
-	ban_loop = 1
-	ban = 0
-	while ban_loop == 1:
-		if (
-			k[ban][0] == "de" or
-			k[ban][0] == "que" or
-			ban += 1
-		else:
-			ban_loop = 0
+	# c=Counter(trends)
+	# k = c.most_common()
+	# ban_loop = 1
+	# ban = 0
 
-	print 'Most Common Word 1: ' + yellow + k[ban][0] + white
+	# print 'Most Common Word 1: ' + yellow + k[ban][0] + white
 
 	bulk_insert = bulk_insert[::-1]
 	# print bulk_insert
