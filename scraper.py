@@ -32,11 +32,12 @@ def main():
 
 # Get the 25 topics from the page
 def get25Topics(url, s):
+	topic_list = []
 	r = singleRequest(url, s)
 	if r != False:
 		soup = BeautifulSoup(r.text, "html.parser")
 		topics = soup.find_all('li')
-		topic_list = []
+		
 		for topic in topics:
 			topic_name = topic.find('a', 'lien-jv topic-title')
 			if (topic_name):
