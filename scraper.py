@@ -20,7 +20,7 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", 
 def main(): 
 	s = requests.Session()
 	url1 = "http://www.jeuxvideo.com/forums/0-1000021-0-1-0-"
-	page = 1
+	page = 0
 	url2 = "-0-communaute.htm"
 
 	while 1:
@@ -88,6 +88,8 @@ def get_messages(page):
 		# MESSAGE
 		message_raw = s.find('div', attrs={'class': 'text-enrichi-forum'})
 		message = message_raw.renderContents().replace('\n', '')
+
+
 		message_raw = message_raw.getText()
 		message_raw = ' '.join(message_raw.split())
 
@@ -110,7 +112,8 @@ def get_messages(page):
 			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"	
 		print ancre + ' ' + pseudo
 
-		row_list = (pseudo, ancre, message_raw, date, avatar)
+		row_list = (pseudo, ancre, date, avatar)
+		# row_list = (pseudo, ancre, message_raw, date, avatar)
 		bulk_insert.append(row_list)
 		# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,message_raw,date,avatar))
 	# threads = []
@@ -135,7 +138,8 @@ def bulkinsert(bulk_insert):
 	cursor = db.cursor()
 	for row in bulk_insert:
 		try:
-			cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
+			# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
+			cursor.execute("""INSERT INTO messages (pseudo,ancre,date,avatar) VALUES (%s,%s,%s,%s) """, row)
 			db.commit()
 		except MySQLdb.IntegrityError:
 			return 1
