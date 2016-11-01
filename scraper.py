@@ -86,10 +86,13 @@ def get_messages(page):
 		# ANCRE
 		ancre = s['data-id']
 		# MESSAGE
-		# message_raw = s.find('div', attrs={'class': 'text-enrichi-forum'})
-		# message = message_raw.renderContents()
-		# message_raw = message_raw.getText()
-		# message_raw = ' '.join(message_raw.split())
+		try:
+			message_raw = s.find('div', attrs={'class': 'text-enrichi-forum'})
+			message = message_raw.renderContents()
+			message_raw = message_raw.getText()
+			message_raw = ' '.join(message_raw.split())
+		except:
+			message_raw = ""
 
 		# each_word = message_raw.split(' ')
 		# for word in each_word:
@@ -103,16 +106,15 @@ def get_messages(page):
 		date = parse_date(date)
 
 		# AVATAR
-		avatar = "image.jeuxvideo.com/avatar-md/default.jpg"
 		try:
 			avatar = s.find('img', attrs={'class': 'user-avatar-msg'})
 			avatar = avatar['data-srcset'].replace('avatar-sm', 'avatar-md').replace('//image.jeuxvideo.com/', '') # Add 'image.jeuxvideo.com' in frontend
 		except:
-			pass
+			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"
 		print ancre + ' ' + pseudo
 
-		row_list = (pseudo, ancre, date)
-		# row_list = (pseudo, ancre, message_raw, date, avatar)
+		# row_list = (pseudo, ancre, date)
+		row_list = (pseudo, ancre, message_raw, date, avatar)
 		bulk_insert.append(row_list)
 		# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,message_raw,date,avatar))
 	# threads = []
@@ -137,8 +139,8 @@ def bulkinsert(bulk_insert):
 	cursor = db.cursor()
 	for row in bulk_insert:
 		try:
-			# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
-			cursor.execute("""INSERT INTO messages (pseudo,ancre,date) VALUES (%s,%s,%s) """, row)
+			cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
+			# cursor.execute("""INSERT INTO messages (pseudo,ancre,date) VALUES (%s,%s,%s) """, row)
 			db.commit()
 		# except Exception, e: print repr(e)
 		except MySQLdb.IntegrityError:

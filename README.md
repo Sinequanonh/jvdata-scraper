@@ -4,7 +4,7 @@ Après JvStalker.fr (devenu jvarchive.fr), cité dans un article assassin sur je
 
 #Communauté
 - 2,423,197 Fri 21 Oct
-- ...
+- 2,561,775 Wed 2 Nov
 
 #Somaire Features
 - [JvStalker](#jvstalker)
