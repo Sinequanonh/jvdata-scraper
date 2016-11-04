@@ -34,7 +34,7 @@ def main():
 		print red + url + white
 		topic_list = get25Topics(url, s)
 		fromLastPage(topic_list, s)
-		current_page += 25
+		# current_page += 25
 
 # Get the 25 topics from the page
 def get25Topics(url, s):
