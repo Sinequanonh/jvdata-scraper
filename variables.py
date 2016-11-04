@@ -1,7 +1,6 @@
 # COLORS
 
 import requests
-import grequests
 
 red = "\033[31m";
 green = "\033[32m";
