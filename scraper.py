@@ -14,7 +14,7 @@ from cgi import escape
 from collections import Counter
 
 # connect
-db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", , charset='utf8', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
+db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", charset='utf8', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
 db.set_character_set('utf8')
 
 # GLOBALS
@@ -98,20 +98,9 @@ def get_messages(page):
 		# MESSAGE
 		try:
 			message_raw = s.find('div', attrs={'class': 'text-enrichi-forum'})
-			# message = message_raw.renderContents()
 			message = unicode(message_raw.renderContents(), 'utf8')
-			# message_raw = message_raw.getText()
-			# message_raw = ' '.join(message_raw.split())
 		except:
-			# message_raw = ""
 			message = ""
-
-		# each_word = message_raw.split(' ')
-		# for word in each_word:
-		# 	trends.append(word)
-
-		# nb_mots = len(message_raw.split(' '))
-		# nb_chars = len(message_raw)
 
 		# DATE
 		date = s.find('div', attrs={'class': 'bloc-date-msg'}).text.replace('\n', '').replace('"', '').lstrip()
@@ -125,7 +114,17 @@ def get_messages(page):
 			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"
 		print str(current_page) + 'th page | ' + magenta + str(date.strftime('%d %b %Y')) + white + ' | ' + str(nb_posts) + ' posts | ' + red + str(nb_integrityErrors) + ' IE' + white + ' | ' + yellow +  pseudo + white
 
-		# row_list = (pseudo, ancre, date)
+		# NOELSHACKS 
+		if "noelshack.com" in message:
+			noelshack = BeautifulSoup(message, "html.parser")
+			print "Il y a du shack!"
+			les_noels = noelshack.find_all('a', attrs={'data-def': 'NOELSHACK'})
+			for le_noel in les_noels:
+				shack = str(le_noel.img['src']).replace('//image.noelshack.com/minis/', '') # Add 'image.noelshack.com/minis/' in frontend for a miniature
+				cursor = db.cursor()														# Add 'http://image.noelshack.com/fichiers/' in frontend for fullpicture
+				cursor.execute("""INSERT INTO gallery (pseudo,ancre,shack,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,shack,date,avatar))
+				db.commit()
+
 		row_list = (pseudo, ancre, message, date, avatar)
 		bulk_insert.append(row_list)
 		# cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,message_raw,date,avatar))
@@ -133,13 +132,6 @@ def get_messages(page):
 	# t = threading.Thread(target=bulkinsert, args=(bulk_insert,))
 	# threads.append(t)
 	# t.start()
-	
-	# c=Counter(trends)
-	# k = c.most_common()
-	# ban_loop = 1
-	# ban = 0
-
-	# print 'Most Common Word 1: ' + yellow + k[ban][0] + white
 
 	bulk_insert = bulk_insert[::-1]
 	if bulkinsert(bulk_insert) == 1:

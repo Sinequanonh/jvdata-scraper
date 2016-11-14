@@ -14,7 +14,7 @@ from cgi import escape
 from collections import Counter
 
 # connect
-db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", , charset='utf8', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
+db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", charset='utf8', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
 db.set_character_set('utf8')
 
 # GLOBALS
