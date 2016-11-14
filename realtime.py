@@ -14,7 +14,8 @@ from cgi import escape
 from collections import Counter
 
 # connect
-db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
+db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="jvdata", , charset='utf8', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
+db.set_character_set('utf8')
 
 # GLOBALS
 nb_posts = 0
@@ -97,11 +98,12 @@ def get_messages(page):
 		# MESSAGE
 		try:
 			message_raw = s.find('div', attrs={'class': 'text-enrichi-forum'})
-			message = message_raw.renderContents()
-			message_raw = message_raw.getText()
-			message_raw = ' '.join(message_raw.split())
+			# message = message_raw.renderContents()
+			message = unicode(message_raw.renderContents(), 'utf8')
+			# message_raw = message_raw.getText()
+			# message_raw = ' '.join(message_raw.split())
 		except:
-			message_raw = ""
+			# message_raw = ""
 			message = ""
 
 		# each_word = message_raw.split(' ')
