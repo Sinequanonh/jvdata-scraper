@@ -112,18 +112,20 @@ def get_messages(page):
 			avatar = avatar['data-srcset'].replace('avatar-sm', 'avatar-md').replace('//image.jeuxvideo.com/', '') # Add 'image.jeuxvideo.com' in frontend
 		except:
 			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"
-		print str(current_page) + 'th page | ' + magenta + str(date.strftime('%d %b %Y')) + white + ' | ' + str(nb_posts) + ' posts | ' + red + str(nb_integrityErrors) + ' IE' + white + ' | ' + yellow +  pseudo + white
+		print str(current_page) + 'th page | ' + magenta + str(date.strftime('%d %b %Y ')) + str(date.strftime('%I:%M%p')) + white + ' | ' + str(nb_posts) + ' posts | ' + red + str(nb_integrityErrors) + ' IE' + white + ' | ' + yellow +  pseudo + white
 
 		# NOELSHACKS 
 		if "noelshack.com" in message:
-			noelshack = BeautifulSoup(message, "html.parser")
-			print "Il y a du shack!"
-			les_noels = noelshack.find_all('a', attrs={'data-def': 'NOELSHACK'})
-			for le_noel in les_noels:
-				shack = str(le_noel.img['src']).replace('//image.noelshack.com/minis/', '') # Add 'image.noelshack.com/minis/' in frontend for a miniature
-				cursor = db.cursor()														# Add 'http://image.noelshack.com/fichiers/' in frontend for fullpicture
-				cursor.execute("""INSERT INTO gallery (pseudo,ancre,shack,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,shack,date,avatar))
-				db.commit()
+			try:
+				noelshack = BeautifulSoup(message, "html.parser")
+				les_noels = noelshack.find_all('a', attrs={'data-def': 'NOELSHACK'})
+				for le_noel in les_noels:
+					shack = str(le_noel.img['src']).replace('//image.noelshack.com/minis/', '') # Add 'image.noelshack.com/minis/' in frontend for a miniature
+					cursor = db.cursor()														# Add 'http://image.noelshack.com/fichiers/' in frontend for fullpicture
+					cursor.execute("""INSERT INTO gallery (pseudo,ancre,shack,date,avatar) VALUES (%s,%s,%s,%s,%s) """,(pseudo,ancre,shack,date,avatar))
+					db.commit()
+			except:
+				pass
 
 		row_list = (pseudo, ancre, message, date, avatar)
 		bulk_insert.append(row_list)

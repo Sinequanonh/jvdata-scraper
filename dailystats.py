@@ -35,7 +35,7 @@ def main():
 		print red + url + white
 		topic_list = get25Topics(url, s)
 		fromLastPage(topic_list, s)
-		current_page += 25
+		# current_page += 25
 
 # Get the 25 topics from the page
 def get25Topics(url, s):
@@ -144,12 +144,15 @@ def bulkinsert(bulk_insert):
 	global nb_posts
 	global nb_integrityErrors
 	cursor = db.cursor()
-	for row in bulk_insert:
+	for row in bulk_insert:	
 		try:
 			cursor.execute("""INSERT INTO messages (pseudo,ancre,message,date,avatar) VALUES (%s,%s,%s,%s,%s) """, row)
+			now = datetime.now()
+			dateMsg = row[3].strftime('%d %b %Y ')
+			dateNow = datetime(now.year, now.month, now.day).strftime('%d %b %Y ')
+			if (dateNow == dateMsg):
+				daily_insert(row)
 			nb_posts += 1
-			# cursor.execute("""INSERT INTO messages (pseudo,ancre,date) VALUES (%s,%s,%s) """, row)
-		# except Exception, e: print repr(e)
 		except MySQLdb.IntegrityError:
 			print red + 'IE' + white
 			nb_integrityErrors += 1
@@ -162,6 +165,15 @@ def bulkinsert(bulk_insert):
 		# except Exception, e: print repr(e)
 	db.commit()
 	return 0
+
+def daily_insert(row):
+	cursor = db.cursor()
+	try:
+		cursor.execute("""INSERT INTO daily (pseudo,avatar,count) VALUES (%s,%s,%s) """, (row[0], row[4], 1))
+	except MySQLdb.IntegrityError:
+		cursor.execute("""UPDATE daily SET count = count + 1 WHERE pseudo =%s""", [row[0]])
+	db.commit()
+	return
 
 def parse_date(date):
 	p_date = date.split(' ')

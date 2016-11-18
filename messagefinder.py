@@ -26,56 +26,12 @@ current_page = 1
 def main():
 	global current_page
 	s = requests.Session()
-	url1 = "https://www.jeuxvideo.com/forums/0-51-0-1-0-"
-	
-	url2 = "-0-blabla-18-25-ans.htm"
-
+	i = 10700000 - 10000
 	while 1:
-		url = url1 + str(current_page) + url2
-		print red + url + white
-		topic_list = get25Topics(url, s)
-		fromLastPage(topic_list, s)
-		current_page += 25
-
-# Get the 25 topics from the page
-def get25Topics(url, s):
-	topic_list = []
-	r = singleRequest(url, s)
-	if r != False:
-		soup = BeautifulSoup(r.text, "html.parser")
-		topics = soup.find_all('li')
-		
-		for topic in topics:
-			topic_name = topic.find('a', 'lien-jv topic-title')
-			if (topic_name):
-				topic_link = topic_name['href']
-				topic_nbmsg = topic.find('span', 'topic-count')
-				topic_nbmsg = topic_nbmsg.text.replace(' ', '').replace('\n', '')
-				topic_nbmsg = int(topic_nbmsg) + 1
-				if topic_nbmsg:
-					topic_nbpage = float(topic_nbmsg) / 20
-					topic_nbpage = int(math.ceil(topic_nbpage))
-					if topic_nbpage == 0:
-						topic_nbpage = 1
-					topic_lastpage = topic_link.split('-')
-					topic_lastpage[3] = str(topic_nbpage + 1)
-					topic_lastpage = '-'.join(topic_lastpage)
-					topic_list.append('https://www.jeuxvideo.com' + topic_lastpage)
-	return topic_list
-
-# Get to the first page from the last one
-def fromLastPage(topic_list, s):
-	for topic in topic_list:
-		while int(topic.split('-')[3]) > 1:
-			previous = topic.split('-')
-			previous_page = int(previous[3]) - 1
-			previous[3] = str(previous_page)
-			topic = '-'.join(previous)
-			print cyan + topic + white
-			r = singleRequest(topic, s)
-			if type(r) != bool:
-				if get_messages(r) == 1:
-					break
+		r = singleRequest('https://www.jeuxvideo.com/ultrapoutch/forums/message/' + str(i), s)
+		get_messages(r)
+		print 'https://www.jeuxvideo.com/ultrapoutch/forums/message/' + str(i)
+		i += 1
 
 # Parse each message
 def get_messages(page):
@@ -112,7 +68,7 @@ def get_messages(page):
 			avatar = avatar['data-srcset'].replace('avatar-sm', 'avatar-md').replace('//image.jeuxvideo.com/', '') # Add 'image.jeuxvideo.com' in frontend
 		except:
 			avatar = "image.jeuxvideo.com/avatar-md/default.jpg"
-		print str(current_page) + 'th page | ' + magenta + str(date.strftime('%d %b %Y ')) + str(date.strftime('%I:%M%p')) + white + ' | ' + str(nb_posts) + ' posts | ' + red + str(nb_integrityErrors) + ' IE' + white + ' | ' + yellow +  pseudo + white
+		print str(current_page) + 'th page | ' + magenta + str(date.strftime('%d %b %Y')) + white + ' | ' + str(nb_posts) + ' posts | ' + red + str(nb_integrityErrors) + ' IE' + white + ' | ' + yellow +  pseudo + white
 
 		# NOELSHACKS 
 		if "noelshack.com" in message:
